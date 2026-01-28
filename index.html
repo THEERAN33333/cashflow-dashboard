@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -2105,8 +2105,21 @@
         });
 
         // ============ INIT ============
+        // קישור קבוע לגוגל שיטס
+        const SHEET_BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGFpXyF6eEyUWTsMSqG_kpYxq5PhZRPU5FrZs6S6zeZcp1MnoQ8P9_f5ULtSyG4nYIZJtXKcwpGxiy/pub?output=csv';
+        
+        // הגדר את הקישור בשדה
+        document.getElementById('sheetUrl').value = SHEET_BASE_URL;
+        
+        // טען נתונים מהשיט
         loadSavedSettings();
-        loadDemoData();
+        loadData();
+        
+        // רענון אוטומטי כל 5 דקות
+        setInterval(() => {
+            console.log('רענון אוטומטי...');
+            loadData();
+        }, 5 * 60 * 1000);
     </script>
 </body>
 </html>
