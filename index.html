@@ -1,5 +1,4 @@
 
-<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1060,17 +1059,25 @@
             <h3>⚙️ הגדרות חיבור</h3>
             <div class="config-grid">
                 <div class="config-item">
-                    <label>קישור לגוגל שיטס (Published CSV)</label>
-                    <input type="text" id="sheetUrl" placeholder="הדבק כאן את הקישור..." />
-                </div>
-                <div class="config-item">
                     <label>יתרת פתיחה</label>
                     <input type="number" id="openingBalance" value="0" />
                 </div>
                 <div class="config-item">
                     <label>חודש נבחר</label>
                     <select id="selectedMonth">
-                        <option value="01-2026">ינואר 2026</option>
+                        <option value="01-2025">ינואר 2025</option>
+                        <option value="02-2025">פברואר 2025</option>
+                        <option value="03-2025">מרץ 2025</option>
+                        <option value="04-2025">אפריל 2025</option>
+                        <option value="05-2025">מאי 2025</option>
+                        <option value="06-2025">יוני 2025</option>
+                        <option value="07-2025">יולי 2025</option>
+                        <option value="08-2025">אוגוסט 2025</option>
+                        <option value="09-2025">ספטמבר 2025</option>
+                        <option value="10-2025">אוקטובר 2025</option>
+                        <option value="11-2025">נובמבר 2025</option>
+                        <option value="12-2025">דצמבר 2025</option>
+                        <option value="01-2026" selected>ינואר 2026</option>
                         <option value="02-2026">פברואר 2026</option>
                         <option value="03-2026">מרץ 2026</option>
                         <option value="04-2026">אפריל 2026</option>
@@ -1304,8 +1311,8 @@
                 <ol style="font-size: 13px; padding-right: 20px; color: var(--text-secondary);">
                     <li>צור גיליון נפרד לכל חודש בשם: 01-2026, 02-2026 וכו'</li>
                     <li>שורה ראשונה = כותרות (בדיוק כמו בטבלה למעלה)</li>
-                    <li>פרסם את השיט: File → Share → Publish to web → CSV</li>
-                    <li>הדבק את הקישור בשדה למעלה</li>
+                    <li>שתף את הגיליון: Share → Anyone with the link can view</li>
+                    <li>הדשבורד יטען אוטומטית מהגיליון</li>
                 </ol>
             </div>
             <div class="modal-buttons">
@@ -1323,6 +1330,11 @@
         const itemsPerPage = 20;
         let charts = {};
 
+        // ============ GOOGLE SHEETS CONFIG ============
+        // הלינק הקבוע לגיליון שלך
+        const SHEET_ID = '1CRqczVp9yOikqiXWW8aW7qbTY4rIlhM52EeLvR7_w3A';
+        const SHEET_GID = '449613540'; // gid של הגיליון הספציפי
+
         // Category colors
         const categoryColors = {
             'הוצאות תפעול שוטפות': { bg: '#ef4444', icon: '🏪' },
@@ -1336,56 +1348,25 @@
 
         // ============ GOOGLE SHEETS CONNECTION ============
         function getSheetUrl() {
-            const baseUrl = document.getElementById('sheetUrl').value.trim();
             const selectedMonth = document.getElementById('selectedMonth').value;
-            
-            if (!baseUrl) return null;
-            
-            // Convert Google Sheets URL to CSV export URL
-            let csvUrl = baseUrl;
-            
-            // Handle different URL formats
-            if (baseUrl.includes('/edit')) {
-                csvUrl = baseUrl.replace('/edit#gid=', '/export?format=csv&gid=');
-                csvUrl = csvUrl.replace('/edit', '/export?format=csv');
-            } else if (baseUrl.includes('/pubhtml')) {
-                csvUrl = baseUrl.replace('/pubhtml', '/pub?output=csv');
-            } else if (baseUrl.includes('/pub?')) {
-                if (!csvUrl.includes('output=csv')) {
-                    csvUrl = csvUrl.replace('output=html', 'output=csv');
-                    if (!csvUrl.includes('output=csv')) {
-                        csvUrl += '&output=csv';
-                    }
-                }
-            }
-            
-            // Add sheet name (month) parameter
-            if (csvUrl.includes('?')) {
-                csvUrl += '&sheet=' + encodeURIComponent(selectedMonth);
-            } else {
-                csvUrl += '?sheet=' + encodeURIComponent(selectedMonth);
-            }
-            
-            return csvUrl;
+            // שימוש ב-export URL עם שם הגיליון (החודש)
+            return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedMonth)}`;
         }
 
         async function fetchFromGoogleSheets() {
             const url = getSheetUrl();
-            
-            if (!url) {
-                showNotification('אנא הכנס קישור לגוגל שיטס', 'error');
-                return null;
-            }
+            console.log('Fetching from:', url);
             
             try {
                 showLoading(true);
                 const response = await fetch(url);
                 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch data');
+                    throw new Error('Failed to fetch data: ' + response.status);
                 }
                 
                 const csvText = await response.text();
+                console.log('CSV received, length:', csvText.length);
                 return parseCSV(csvText);
             } catch (error) {
                 console.error('Error fetching from Google Sheets:', error);
@@ -1400,6 +1381,8 @@
             const lines = csvText.split('\n').filter(line => line.trim());
             const transactions = [];
             let openingBalance = 0;
+            
+            console.log('Parsing CSV, lines:', lines.length);
             
             // Check for opening balance in first row
             if (lines.length > 0 && lines[0].includes('יתרת פתיחה')) {
@@ -1420,12 +1403,15 @@
             }
             
             if (headerIndex === -1) {
+                console.log('Header row not found, first lines:', lines.slice(0, 3));
                 showNotification('לא נמצאה שורת כותרות בקובץ', 'error');
                 return [];
             }
             
             // Parse headers
             const headers = parseCSVLine(lines[headerIndex]);
+            console.log('Headers found:', headers);
+            
             const headerMap = {};
             headers.forEach((h, i) => {
                 const clean = h.trim().replace(/"/g, '');
@@ -1471,6 +1457,7 @@
                 });
             }
             
+            console.log('Parsed transactions:', transactions.length);
             return transactions;
         }
 
@@ -1543,47 +1530,6 @@
             }
         `;
         document.head.appendChild(style);
-
-        // ============ DEMO DATA ============
-        function loadDemoData() {
-            allTransactions = [
-                // הוצאות תפעול שוטפות
-                { date: '2026-01-05', type: 'expense', category: 'הוצאות תפעול שוטפות', subcategory: 'ירקות ופירות', supplier: 'ספק ירקות א', amount: 8500, checkNum: '1001', status: 'completed', notes: 'הזמנה שבועית' },
-                { date: '2026-01-05', type: 'expense', category: 'הוצאות תפעול שוטפות', subcategory: 'ירקות ופירות', supplier: 'ספק פירות ב', amount: 6200, checkNum: '1002', status: 'completed', notes: '' },
-                { date: '2026-01-08', type: 'expense', category: 'הוצאות תפעול שוטפות', subcategory: 'מוצרי מכולת', supplier: 'סופר סיטונאות', amount: 3400, checkNum: '1003', status: 'completed', notes: '' },
-                { date: '2026-01-12', type: 'expense', category: 'הוצאות תפעול שוטפות', subcategory: 'ירקות ופירות', supplier: 'ספק ירקות א', amount: 9100, checkNum: '1004', status: 'completed', notes: 'הזמנה שבועית' },
-                { date: '2026-01-15', type: 'expense', category: 'הוצאות תפעול שוטפות', subcategory: 'אריזות', supplier: 'אריזות בע"מ', amount: 2800, checkNum: '1005', status: 'pending', notes: '' },
-                
-                // לוגיסטיקה ותפעול
-                { date: '2026-01-03', type: 'expense', category: 'לוגיסטיקה ותפעול', subcategory: 'דלק', supplier: 'סונול', amount: 1800, checkNum: '', status: 'completed', notes: 'תדלוק משאיות' },
-                { date: '2026-01-10', type: 'expense', category: 'לוגיסטיקה ותפעול', subcategory: 'תחזוקת רכבים', supplier: 'מוסך אמין', amount: 4500, checkNum: '1006', status: 'completed', notes: 'טיפול 50,000' },
-                { date: '2026-01-18', type: 'expense', category: 'לוגיסטיקה ותפעול', subcategory: 'דלק', supplier: 'פז', amount: 2100, checkNum: '', status: 'pending', notes: '' },
-                
-                // שיווק ומכירות
-                { date: '2026-01-01', type: 'expense', category: 'שיווק ומכירות', subcategory: 'פרסום', supplier: 'מנהלת אתר', amount: 3500, checkNum: '', status: 'completed', notes: 'ניהול חודשי' },
-                { date: '2026-01-01', type: 'expense', category: 'שיווק ומכירות', subcategory: 'פרסום', supplier: 'מנהל משפיעניות', amount: 5000, checkNum: '', status: 'completed', notes: 'קמפיין ינואר' },
-                { date: '2026-01-15', type: 'expense', category: 'שיווק ומכירות', subcategory: 'עיצוב', supplier: 'מעצב גרפי', amount: 1200, checkNum: '', status: 'pending', notes: 'עיצוב פליירים' },
-                
-                // הוצאות כלליות
-                { date: '2026-01-01', type: 'expense', category: 'הוצאות כלליות', subcategory: 'שירותי תוכנה', supplier: 'אלמנטור', amount: 450, checkNum: '', status: 'completed', notes: 'מנוי שנתי' },
-                { date: '2026-01-05', type: 'expense', category: 'הוצאות כלליות', subcategory: 'חשבונות', supplier: 'חברת חשמל', amount: 2800, checkNum: '1007', status: 'completed', notes: '' },
-                { date: '2026-01-10', type: 'expense', category: 'הוצאות כלליות', subcategory: 'חשבונות', supplier: 'מים', amount: 650, checkNum: '', status: 'completed', notes: '' },
-                { date: '2026-01-20', type: 'expense', category: 'הוצאות כלליות', subcategory: 'ביטוחים', supplier: 'הראל', amount: 1800, checkNum: '1008', status: 'pending', notes: 'ביטוח עסק' },
-                
-                // החזרי הלוואות
-                { date: '2026-01-15', type: 'expense', category: 'החזרי הלוואות', subcategory: 'הלוואות בנק', supplier: 'בנק לאומי', amount: 8500, checkNum: '', status: 'completed', notes: 'החזר חודשי' },
-                { date: '2026-01-20', type: 'expense', category: 'החזרי הלוואות', subcategory: 'אשראי', supplier: 'ישראכרט', amount: 12000, checkNum: '', status: 'pending', notes: 'תשלום 3 מתוך 12' },
-                
-                // הכנסות
-                { date: '2026-01-02', type: 'income', category: 'הכנסות', subcategory: 'מכירות ישירות', supplier: 'לקוחות קמעונאים', amount: 45000, checkNum: '', status: 'completed', notes: 'מכירות שבוע ראשון' },
-                { date: '2026-01-09', type: 'income', category: 'הכנסות', subcategory: 'מכירות ישירות', supplier: 'לקוחות קמעונאים', amount: 52000, checkNum: '', status: 'completed', notes: 'מכירות שבוע שני' },
-                { date: '2026-01-16', type: 'income', category: 'הכנסות', subcategory: 'סיטונאות', supplier: 'רשת מזון', amount: 35000, checkNum: '5001', status: 'completed', notes: 'הזמנה חודשית' },
-                { date: '2026-01-23', type: 'income', category: 'הכנסות', subcategory: 'מכירות ישירות', supplier: 'לקוחות קמעונאים', amount: 48000, checkNum: '', status: 'pending', notes: 'מכירות שבוע שלישי' },
-                { date: '2026-01-30', type: 'income', category: 'הכנסות', subcategory: 'סיטונאות', supplier: 'מסעדות', amount: 28000, checkNum: '5002', status: 'pending', notes: '' },
-            ];
-            
-            processData();
-        }
 
         // ============ DATA PROCESSING ============
         function processData() {
@@ -2009,15 +1955,6 @@
         }
 
         async function loadData() {
-            const url = document.getElementById('sheetUrl').value.trim();
-            
-            if (!url) {
-                // No URL - load demo data
-                loadDemoData();
-                showNotification('טוען נתונים לדוגמה. הכנס קישור לגוגל שיטס כדי לטעון נתונים אמיתיים', 'info');
-                return;
-            }
-            
             // Fetch from Google Sheets
             const transactions = await fetchFromGoogleSheets();
             
@@ -2025,24 +1962,10 @@
                 allTransactions = transactions;
                 processData();
                 showNotification(`נטענו ${transactions.length} תנועות בהצלחה!`, 'success');
-                
-                // Save URL to localStorage
-                localStorage.setItem('cashflow_sheet_url', url);
             } else if (transactions && transactions.length === 0) {
-                showNotification('לא נמצאו תנועות בגיליון', 'info');
-            }
-        }
-        
-        // Load saved URL on page load
-        function loadSavedSettings() {
-            const savedUrl = localStorage.getItem('cashflow_sheet_url');
-            if (savedUrl) {
-                document.getElementById('sheetUrl').value = savedUrl;
-            }
-            
-            const savedBalance = localStorage.getItem('cashflow_opening_balance');
-            if (savedBalance) {
-                document.getElementById('openingBalance').value = savedBalance;
+                allTransactions = [];
+                processData();
+                showNotification('לא נמצאו תנועות בגיליון הנבחר', 'info');
             }
         }
 
@@ -2072,7 +1995,7 @@
         function copyHeaders() {
             const headers = 'תאריך\tסוג\tקטגוריה\tתת_קטגוריה\tספק\tסכום\tמס_צק\tסטטוס\tהערות';
             navigator.clipboard.writeText(headers);
-            alert('הכותרות הועתקו! הדבק בשורה הראשונה של הגוגל שיטס');
+            showNotification('הכותרות הועתקו! הדבק בשורה הראשונה של הגוגל שיטס', 'success');
         }
 
         // ============ EVENT LISTENERS ============
@@ -2099,20 +2022,17 @@
         
         // Reload when month changes
         document.getElementById('selectedMonth').addEventListener('change', function() {
-            if (document.getElementById('sheetUrl').value.trim()) {
-                loadData();
-            }
+            loadData();
         });
 
         // ============ INIT ============
-        // קישור קבוע לגוגל שיטס
-        const SHEET_BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGFpXyF6eEyUWTsMSqG_kpYxq5PhZRPU5FrZs6S6zeZcp1MnoQ8P9_f5ULtSyG4nYIZJtXKcwpGxiy/pub?output=csv';
-        
-        // הגדר את הקישור בשדה
-        document.getElementById('sheetUrl').value = SHEET_BASE_URL;
+        // Load saved opening balance
+        const savedBalance = localStorage.getItem('cashflow_opening_balance');
+        if (savedBalance) {
+            document.getElementById('openingBalance').value = savedBalance;
+        }
         
         // טען נתונים מהשיט
-        loadSavedSettings();
         loadData();
         
         // רענון אוטומטי כל 5 דקות
