@@ -1,4 +1,5 @@
 
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* ===== CSS VARIABLES ===== */
         :root {
             --bg-primary: #0a0f1c;
             --bg-secondary: #111827;
@@ -29,18 +31,34 @@
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ===== LIGHT MODE ===== */
+        body.light-mode {
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
 
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Heebo', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
+            transition: background var(--transition), color var(--transition);
         }
 
+        /* ===== HEADER ===== */
         .header {
             background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
             border-bottom: 1px solid var(--border-color);
@@ -48,8 +66,8 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background var(--transition), border-color var(--transition);
         }
-
         .header-content {
             max-width: 1600px;
             margin: 0 auto;
@@ -59,40 +77,25 @@
             flex-wrap: wrap;
             gap: 16px;
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
+        .logo { display: flex; align-items: center; gap: 16px; }
         .logo-icon {
-            width: 48px;
-            height: 48px;
+            width: 48px; height: 48px;
             background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%);
             border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 24px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            animation: pulse-logo 3s ease-in-out infinite;
         }
-
-        .logo-text h1 {
-            font-size: 24px;
-            font-weight: 700;
+        @keyframes pulse-logo {
+            0%, 100% { box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(16, 185, 129, 0.7); }
         }
+        .logo-text h1 { font-size: 24px; font-weight: 700; }
+        .logo-text span { font-size: 13px; color: var(--text-muted); }
+        .header-actions { display: flex; gap: 12px; align-items: center; }
 
-        .logo-text span {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
+        /* ===== BUTTONS ===== */
         .btn {
             padding: 10px 20px;
             border-radius: var(--radius-sm);
@@ -104,56 +107,62 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
         }
-
+        .btn:hover { transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
         }
-
+        .btn-primary:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); }
         .btn-secondary {
             background: var(--bg-card);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
         }
+        .btn-secondary:hover { background: var(--bg-card-hover); }
+        .btn-icon {
+            width: 40px; height: 40px;
+            padding: 0;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition);
+        }
+        .btn-icon:hover { background: var(--bg-card-hover); transform: scale(1.05); }
 
+        /* ===== MAIN CONTAINER ===== */
         .main-container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 24px 32px;
         }
 
+        /* ===== CONFIG SECTION ===== */
         .config-section {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 24px;
             margin-bottom: 24px;
+            transition: background var(--transition), border-color var(--transition);
+            animation: fadeInDown 0.5s ease both;
         }
-
-        .config-section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
+        .config-section h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
         .config-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
+            align-items: end;
         }
-
-        .config-item {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .config-item label {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
+        .config-item { display: flex; flex-direction: column; gap: 6px; }
+        .config-item label { font-size: 13px; color: var(--text-secondary); }
         .config-item input, .config-item select {
             padding: 12px 16px;
             background: var(--bg-secondary);
@@ -162,87 +171,122 @@
             color: var(--text-primary);
             font-family: inherit;
             font-size: 14px;
+            transition: border-color var(--transition), background var(--transition);
+        }
+        .config-item input:focus, .config-item select:focus {
+            outline: none;
+            border-color: var(--accent-green);
         }
 
+        /* ===== COMPARE MODE ===== */
+        .compare-section {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-purple);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: none;
+            animation: fadeInDown 0.4s ease both;
+        }
+        .compare-section.active { display: block; }
+        .compare-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .compare-header h3 { font-size: 15px; font-weight: 600; color: var(--accent-purple); }
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* ===== STATS GRID ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
-
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 20px 24px;
+            transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+            animation: fadeInUp 0.5s ease both;
+            cursor: default;
         }
-
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
         .stat-icon {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 18px;
             margin-bottom: 12px;
         }
-
         .stat-card.green .stat-icon { background: var(--accent-green-soft); }
         .stat-card.red .stat-icon { background: var(--accent-red-soft); }
         .stat-card.blue .stat-icon { background: var(--accent-blue-soft); }
         .stat-card.purple .stat-icon { background: var(--accent-purple-soft); }
-
         .stat-value {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 4px;
+            transition: color var(--transition);
         }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-secondary);
+        .stat-label { font-size: 13px; color: var(--text-secondary); }
+        .stat-delta {
+            font-size: 12px;
+            margin-top: 6px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-block;
         }
+        .stat-delta.up { background: var(--accent-green-soft); color: var(--accent-green); }
+        .stat-delta.down { background: var(--accent-red-soft); color: var(--accent-red); }
 
+        /* ===== CHARTS ===== */
         .charts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 24px;
             margin-bottom: 24px;
         }
-
         .chart-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 24px;
+            transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+            animation: fadeInUp 0.5s ease 0.3s both;
         }
-
+        .chart-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
         .chart-title {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        .chart-container { height: 280px; position: relative; }
 
-        .chart-container {
-            height: 280px;
-        }
-
+        /* ===== CATEGORY LIST ===== */
         .category-section {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 24px;
             margin-bottom: 24px;
+            transition: background var(--transition), border-color var(--transition);
+            animation: fadeInUp 0.5s ease 0.4s both;
         }
-
-        .category-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
+        .category-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
         .category-item {
             background: var(--bg-secondary);
             border-radius: var(--radius-sm);
@@ -251,37 +295,47 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background var(--transition), transform var(--transition);
+            cursor: default;
         }
+        .category-item:hover { background: var(--bg-card-hover); transform: translateX(-3px); }
+        .category-name { font-size: 14px; font-weight: 500; }
+        .category-amount { font-size: 16px; font-weight: 600; }
+        .category-bar-wrap { flex: 1; margin: 0 16px; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; }
+        .category-bar { height: 100%; border-radius: 3px; background: var(--accent-red); transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        .category-name {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .category-amount {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
+        /* ===== TABLE ===== */
         .table-section {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             overflow: hidden;
+            transition: background var(--transition), border-color var(--transition);
+            animation: fadeInUp 0.5s ease 0.5s both;
         }
-
         .table-header {
             padding: 20px 24px;
             border-bottom: 1px solid var(--border-color);
             font-size: 16px;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .search-input {
+            padding: 8px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            width: 220px;
+            transition: border-color var(--transition);
         }
-
+        .search-input:focus { outline: none; border-color: var(--accent-green); }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
         th {
             padding: 14px 16px;
             text-align: right;
@@ -289,57 +343,50 @@
             font-weight: 600;
             color: var(--text-secondary);
             background: var(--bg-secondary);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            transition: background var(--transition);
         }
-
+        th:hover { background: var(--bg-card-hover); }
         td {
             padding: 14px 16px;
             font-size: 14px;
             border-bottom: 1px solid var(--border-color);
+            transition: background var(--transition);
+            white-space: nowrap;
         }
-
+        tr:hover td { background: var(--bg-card-hover); }
+        tr:last-child td { border-bottom: none; }
         .status-badge {
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 500;
         }
+        .status-badge.completed { background: var(--accent-green-soft); color: var(--accent-green); }
+        .status-badge.pending { background: var(--accent-yellow-soft); color: var(--accent-yellow); }
+        .type-badge { padding: 4px 8px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 500; }
+        .type-badge.income { background: var(--accent-green-soft); color: var(--accent-green); }
+        .type-badge.expense { background: var(--accent-red-soft); color: var(--accent-red); }
+        .amount-cell.income { color: var(--accent-green); font-weight: 600; }
+        .amount-cell.expense { color: var(--accent-red); font-weight: 600; }
 
-        .status-badge.completed {
-            background: var(--accent-green-soft);
-            color: var(--accent-green);
-        }
-
-        .status-badge.pending {
-            background: var(--accent-yellow-soft);
-            color: var(--accent-yellow);
-        }
-
-        .type-badge {
-            padding: 4px 8px;
+        /* ===== SKELETON LOADING ===== */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
             border-radius: var(--radius-sm);
-            font-size: 11px;
-            font-weight: 500;
         }
-
-        .type-badge.income {
-            background: var(--accent-green-soft);
-            color: var(--accent-green);
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
+        .skeleton-row td { padding: 10px 16px; }
+        .skeleton-cell { height: 16px; border-radius: 4px; }
 
-        .type-badge.expense {
-            background: var(--accent-red-soft);
-            color: var(--accent-red);
-        }
-
-        .amount-cell.income { color: var(--accent-green); }
-        .amount-cell.expense { color: var(--accent-red); }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-        }
-
+        /* ===== ERROR ===== */
         .error-msg {
             background: var(--accent-red-soft);
             color: var(--accent-red);
@@ -347,376 +394,774 @@
             border-radius: var(--radius-sm);
             margin-bottom: 24px;
             text-align: center;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            animation: fadeInDown 0.3s ease both;
         }
 
+        /* ===== LOADING SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes countUp {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ===== TOOLTIP ===== */
+        .tooltip-wrap { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .tooltip-wrap:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        /* ===== CACHE INDICATOR ===== */
+        .cache-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: var(--accent-blue-soft);
+            color: var(--accent-blue);
+            margin-right: 8px;
+        }
+
+        /* ===== COMPARE CHARTS ===== */
+        .compare-chart-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            display: none;
+            animation: fadeInUp 0.5s ease both;
+        }
+        .compare-chart-section.active { display: block; }
+        .compare-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+        .compare-col h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary); }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .main-container { padding: 16px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .charts-grid { grid-template-columns: 1fr; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .compare-stats-grid { grid-template-columns: 1fr; }
+            .search-input { width: 150px; }
         }
+
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .pagination-btns { display: flex; gap: 8px; }
+        .page-btn {
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+        .page-btn:hover { background: var(--bg-card-hover); }
+        .page-btn.active { background: var(--accent-green); border-color: var(--accent-green); color: white; }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">💰</div>
-                <div class="logo-text">
-                    <h1>דשבורד תזרים</h1>
-                    <span>צחילה • תמיד מקומי • תמיד טרי</span>
-                </div>
-            </div>
-            <div class="header-actions">
-                <button class="btn btn-primary" onclick="loadData()">🔄 רענן נתונים</button>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-icon">💰</div>
+            <div class="logo-text">
+                <h1>דשבורד תזרים</h1>
+                <span>צחילה • תמיד מקומי • תמיד טרי</span>
             </div>
         </div>
-    </header>
+        <div class="header-actions">
+            <div class="tooltip-wrap">
+                <button class="btn-icon" onclick="toggleCompare()" id="compareBtn" title="השוואה">⚖️</button>
+                <span class="tooltip-text">השוואה בין חודשים</span>
+            </div>
+            <div class="tooltip-wrap">
+                <button class="btn-icon" onclick="toggleTheme()" id="themeBtn">🌙</button>
+                <span class="tooltip-text">מצב בהיר/כהה</span>
+            </div>
+            <button class="btn btn-primary" onclick="loadData(true)" id="refreshBtn">
+                🔄 רענן נתונים
+            </button>
+        </div>
+    </div>
+</header>
 
-    <div class="main-container">
-        <div class="config-section">
-            <h3>⚙️ הגדרות</h3>
-            <div class="config-grid">
-                <div class="config-item">
-                    <label>יתרת פתיחה</label>
-                    <input type="number" id="openingBalance" value="0" onchange="updateStats()" />
-                </div>
-                <div class="config-item">
-                    <label>חודש נבחר</label>
-                    <select id="selectedMonth" onchange="loadData()">
-                        <option value="01-2026">ינואר 2026</option>
-                        <option value="02-2026">פברואר 2026</option>
-                        <option value="03-2026">מרץ 2026</option>
-                        <option value="04-2026">אפריל 2026</option>
-                        <option value="05-2026">מאי 2026</option>
-                        <option value="06-2026">יוני 2026</option>
-                        <option value="07-2026">יולי 2026</option>
-                        <option value="08-2026">אוגוסט 2026</option>
-                        <option value="09-2026">ספטמבר 2026</option>
-                        <option value="10-2026">אוקטובר 2026</option>
-                        <option value="11-2026">נובמבר 2026</option>
-                        <option value="12-2026">דצמבר 2026</option>
-                    </select>
-                </div>
+<div class="main-container">
+
+    <!-- CONFIG -->
+    <div class="config-section">
+        <h3>⚙️ הגדרות</h3>
+        <div class="config-grid">
+            <div class="config-item">
+                <label>יתרת פתיחה</label>
+                <input type="number" id="openingBalance" value="0" onchange="updateStats()" />
+            </div>
+            <div class="config-item">
+                <label>חודש נבחר</label>
+                <select id="selectedMonth" onchange="loadData(false)">
+                    <option value="01-2026">ינואר 2026</option>
+                    <option value="02-2026">פברואר 2026</option>
+                    <option value="03-2026" selected>מרץ 2026</option>
+                    <option value="04-2026">אפריל 2026</option>
+                    <option value="05-2026">מאי 2026</option>
+                    <option value="06-2026">יוני 2026</option>
+                    <option value="07-2026">יולי 2026</option>
+                    <option value="08-2026">אוגוסט 2026</option>
+                    <option value="09-2026">ספטמבר 2026</option>
+                    <option value="10-2026">אוקטובר 2026</option>
+                    <option value="11-2026">נובמבר 2026</option>
+                    <option value="12-2026">דצמבר 2026</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <div id="errorMsg" class="error-msg" style="display:none;"></div>
-
-        <div class="stats-grid">
-            <div class="stat-card blue">
-                <div class="stat-icon">💵</div>
-                <div class="stat-value" id="currentBalance">₪0</div>
-                <div class="stat-label">יתרה נוכחית</div>
+    <!-- COMPARE SECTION -->
+    <div class="compare-section" id="compareSection">
+        <div class="compare-header">
+            <h3>⚖️ השוואה בין חודשים</h3>
+            <button class="btn btn-secondary" onclick="loadCompare()">טען השוואה</button>
+        </div>
+        <div class="compare-grid">
+            <div class="config-item">
+                <label>חודש א׳ להשוואה</label>
+                <select id="compareMonth1">
+                    <option value="01-2026">ינואר 2026</option>
+                    <option value="02-2026">פברואר 2026</option>
+                    <option value="03-2026" selected>מרץ 2026</option>
+                    <option value="04-2026">אפריל 2026</option>
+                    <option value="05-2026">מאי 2026</option>
+                    <option value="06-2026">יוני 2026</option>
+                </select>
             </div>
-            <div class="stat-card green">
-                <div class="stat-icon">📈</div>
-                <div class="stat-value" id="totalIncome">₪0</div>
-                <div class="stat-label">סה"כ הכנסות</div>
-            </div>
-            <div class="stat-card red">
-                <div class="stat-icon">📉</div>
-                <div class="stat-value" id="totalExpenses">₪0</div>
-                <div class="stat-label">סה"כ הוצאות</div>
-            </div>
-            <div class="stat-card purple">
-                <div class="stat-icon">📊</div>
-                <div class="stat-value" id="netFlow">₪0</div>
-                <div class="stat-label">רווח/הפסד תזרימי</div>
+            <div class="config-item">
+                <label>חודש ב׳ להשוואה</label>
+                <select id="compareMonth2">
+                    <option value="01-2026">ינואר 2026</option>
+                    <option value="02-2026" selected>פברואר 2026</option>
+                    <option value="03-2026">מרץ 2026</option>
+                    <option value="04-2026">אפריל 2026</option>
+                    <option value="05-2026">מאי 2026</option>
+                    <option value="06-2026">יוני 2026</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <div class="charts-grid">
-            <div class="chart-card">
-                <div class="chart-title">התפלגות הוצאות לפי קטגוריה</div>
-                <div class="chart-container">
-                    <canvas id="categoryChart"></canvas>
-                </div>
-            </div>
-            <div class="chart-card">
-                <div class="chart-title">הכנסות מול הוצאות</div>
-                <div class="chart-container">
-                    <canvas id="incomeExpenseChart"></canvas>
-                </div>
+    <!-- COMPARE CHARTS -->
+    <div class="compare-chart-section" id="compareChartSection">
+        <div class="chart-title">📊 השוואה: <span id="compareTitle"></span></div>
+        <div class="compare-stats-grid" id="compareStatsGrid"></div>
+        <div class="chart-container">
+            <canvas id="compareChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ERROR -->
+    <div id="errorMsg" class="error-msg" style="display:none;"></div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-grid">
+        <div class="stat-card blue">
+            <div class="stat-icon">💵</div>
+            <div class="stat-value" id="currentBalance">₪0</div>
+            <div class="stat-label">יתרה נוכחית</div>
+            <div class="stat-delta" id="balanceDelta" style="display:none"></div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-icon">📈</div>
+            <div class="stat-value" id="totalIncome">₪0</div>
+            <div class="stat-label">סה"כ הכנסות</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-icon">📉</div>
+            <div class="stat-value" id="totalExpenses">₪0</div>
+            <div class="stat-label">סה"כ הוצאות</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value" id="netFlow">₪0</div>
+            <div class="stat-label">רווח/הפסד תזרימי</div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-title">🍩 התפלגות הוצאות לפי קטגוריה</div>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
             </div>
         </div>
-
-        <div class="category-section">
-            <div class="category-title">התפלגות הוצאות לפי קטגוריה</div>
-            <div id="categoryList"></div>
+        <div class="chart-card">
+            <div class="chart-title">📊 הכנסות מול הוצאות</div>
+            <div class="chart-container">
+                <canvas id="incomeExpenseChart"></canvas>
+            </div>
         </div>
+    </div>
 
-        <div class="table-section">
-            <div class="table-header">כל התנועות</div>
+    <!-- CATEGORY LIST -->
+    <div class="category-section">
+        <div class="category-title">📋 התפלגות הוצאות לפי קטגוריה</div>
+        <div id="categoryList"></div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-section">
+        <div class="table-header">
+            <span>📑 כל התנועות <span id="cacheIndicator"></span></span>
+            <input class="search-input" type="text" id="searchInput" placeholder="🔍 חיפוש..." oninput="filterTable()" />
+        </div>
+        <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <th>תאריך</th>
+                        <th onclick="sortTable('date')">תאריך ↕</th>
                         <th>סוג</th>
-                        <th>קטגוריה</th>
+                        <th onclick="sortTable('category')">קטגוריה ↕</th>
                         <th>תת-קטגוריה</th>
-                        <th>ספק</th>
-                        <th>סכום</th>
+                        <th onclick="sortTable('supplier')">ספק ↕</th>
+                        <th onclick="sortTable('amount')">סכום ↕</th>
                         <th>מס' צ'ק</th>
                         <th>סטטוס</th>
                         <th>הערות</th>
                     </tr>
                 </thead>
                 <tbody id="transactionsBody">
-                    <tr><td colspan="9" class="loading">טוען נתונים...</td></tr>
+                    <tr class="skeleton-row"><td colspan="9" style="height:200px; text-align:center; color: var(--text-muted);">טוען נתונים...</td></tr>
                 </tbody>
             </table>
         </div>
+        <div class="pagination" id="paginationArea" style="display:none">
+            <span id="paginationInfo"></span>
+            <div class="pagination-btns" id="paginationBtns"></div>
+        </div>
     </div>
 
-    <script>
-        // ============ CONFIG ============
-        const SHEET_ID = '1JTTGR7W_VG1q25jbZNXQ3X3DW97rUJJAPduyeuu7DLw';
-        
-        let allTransactions = [];
-        let charts = {};
+</div>
 
-        // ============ LOAD DATA ============
-        async function loadData() {
-            const month = document.getElementById('selectedMonth').value;
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(month)}`;
-            
-            document.getElementById('transactionsBody').innerHTML = '<tr><td colspan="9" class="loading">טוען נתונים...</td></tr>';
-            document.getElementById('errorMsg').style.display = 'none';
-            
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Failed to fetch');
-                
-                const csvText = await response.text();
-                const transactions = parseCSV(csvText);
-                
-                if (transactions.length === 0) {
-                    showError('לא נמצאו נתונים בגיליון ' + month);
-                    return;
-                }
-                
-                allTransactions = transactions;
-                updateStats();
-                updateCharts();
-                updateCategoryList();
-                updateTable();
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showError('שגיאה בטעינת הנתונים. וודא שהגיליון משותף לכולם.');
-            }
+<script>
+// ============ CONFIG ============
+const SHEET_ID = '1JTTGR7W_VG1q25jbZNXQ3X3DW97rUJJAPduyeuu7DLw';
+const ROWS_PER_PAGE = 20;
+
+let allTransactions = [];
+let filteredTransactions = [];
+let charts = {};
+let dataCache = {};
+let currentPage = 1;
+let sortKey = 'date';
+let sortAsc = false;
+let compareMode = false;
+let isLight = false;
+
+// ============ THEME ============
+function toggleTheme() {
+    isLight = !isLight;
+    document.body.classList.toggle('light-mode', isLight);
+    document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
+    // Re-render charts with new colors
+    if (allTransactions.length) updateCharts();
+}
+
+// ============ COMPARE MODE ============
+function toggleCompare() {
+    compareMode = !compareMode;
+    document.getElementById('compareSection').classList.toggle('active', compareMode);
+    document.getElementById('compareBtn').style.background = compareMode ? 'var(--accent-purple-soft)' : '';
+    if (!compareMode) {
+        document.getElementById('compareChartSection').classList.remove('active');
+    }
+}
+
+// ============ LOAD DATA ============
+async function loadData(forceRefresh = false) {
+    const month = document.getElementById('selectedMonth').value;
+    const btn = document.getElementById('refreshBtn');
+    btn.innerHTML = '<span class="spinner"></span> טוען...';
+    btn.disabled = true;
+
+    document.getElementById('errorMsg').style.display = 'none';
+    document.getElementById('cacheIndicator').innerHTML = '';
+    showSkeletonRows();
+
+    try {
+        const transactions = await fetchMonth(month, forceRefresh);
+        if (transactions === null) {
+            showError('לא נמצאו נתונים בגיליון ' + month);
+            return;
         }
+        allTransactions = transactions;
+        filteredTransactions = [...allTransactions];
+        currentPage = 1;
 
-        function showError(msg) {
-            document.getElementById('errorMsg').textContent = msg;
-            document.getElementById('errorMsg').style.display = 'block';
+        updateStats();
+        updateCharts();
+        updateCategoryList();
+        renderTable();
+
+        if (dataCache[month] && !forceRefresh) {
+            document.getElementById('cacheIndicator').innerHTML = '<span class="cache-badge">⚡ מהמטמון</span>';
         }
+    } catch (error) {
+        console.error('Error:', error);
+        showError('שגיאה בטעינת הנתונים. וודא שהגיליון משותף לכולם.');
+    } finally {
+        btn.innerHTML = '🔄 רענן נתונים';
+        btn.disabled = false;
+    }
+}
 
-        function parseCSV(csvText) {
-            const lines = csvText.split('\n').filter(line => line.trim());
-            const transactions = [];
-            
-            // Find header row
-            let headerIndex = -1;
-            for (let i = 0; i < Math.min(5, lines.length); i++) {
-                if (lines[i].includes('תאריך') && lines[i].includes('סכום')) {
-                    headerIndex = i;
-                    break;
-                }
-            }
-            
-            if (headerIndex === -1) return [];
-            
-            const headers = parseCSVLine(lines[headerIndex]);
-            const headerMap = {};
-            headers.forEach((h, i) => {
-                headerMap[h.trim().replace(/"/g, '')] = i;
-            });
-            
-            for (let i = headerIndex + 1; i < lines.length; i++) {
-                const values = parseCSVLine(lines[i]);
-                if (values.length < 3) continue;
-                
-                const getValue = (key) => {
-                    const idx = headerMap[key];
-                    return idx !== undefined ? (values[idx] || '').trim().replace(/"/g, '') : '';
-                };
-                
-                const dateStr = getValue('תאריך');
-                if (!dateStr) continue;
-                
-                let date = dateStr;
-                if (dateStr.includes('/')) {
-                    const parts = dateStr.split('/');
-                    if (parts.length === 3) {
-                        date = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                    }
-                }
-                
-                const typeVal = getValue('סוג');
-                const type = typeVal.includes('הכנסה') ? 'income' : 'expense';
-                const statusVal = getValue('סטטוס');
-                const status = statusVal.includes('בוצע') ? 'completed' : 'pending';
-                const amountStr = getValue('סכום').replace(/[₪,\s]/g, '');
-                const amount = parseFloat(amountStr) || 0;
-                
-                transactions.push({
-                    date,
-                    type,
-                    category: getValue('קטגוריה') || 'אחר',
-                    subcategory: getValue('תת_קטגוריה') || 'אחר',
-                    supplier: getValue('ספק') || '',
-                    amount,
-                    checkNum: getValue('מס_צק') || '',
-                    status,
-                    notes: getValue('הערות') || ''
-                });
-            }
-            
-            return transactions;
-        }
+async function fetchMonth(month, forceRefresh = false) {
+    if (!forceRefresh && dataCache[month]) {
+        return dataCache[month];
+    }
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(month)}`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Failed to fetch');
+    const csvText = await response.text();
+    const transactions = parseCSV(csvText);
+    if (transactions.length === 0) return null;
+    dataCache[month] = transactions;
+    return transactions;
+}
 
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current);
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            result.push(current);
-            return result;
-        }
+// ============ COMPARE ============
+async function loadCompare() {
+    const m1 = document.getElementById('compareMonth1').value;
+    const m2 = document.getElementById('compareMonth2').value;
+    if (m1 === m2) { showError('בחר שני חודשים שונים להשוואה'); return; }
 
-        function updateStats() {
-            const openingBalance = parseFloat(document.getElementById('openingBalance').value) || 0;
-            const completed = allTransactions.filter(t => t.status === 'completed');
-            
-            const totalIncome = completed.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-            const totalExpenses = completed.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-            const currentBalance = openingBalance + totalIncome - totalExpenses;
-            const netFlow = totalIncome - totalExpenses;
-            
-            document.getElementById('currentBalance').textContent = formatCurrency(currentBalance);
-            document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
-            document.getElementById('totalExpenses').textContent = formatCurrency(totalExpenses);
-            document.getElementById('netFlow').textContent = formatCurrency(netFlow);
-            document.getElementById('netFlow').style.color = netFlow >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-        }
+    try {
+        const [t1, t2] = await Promise.all([fetchMonth(m1), fetchMonth(m2)]);
+        if (!t1 || !t2) { showError('לא ניתן לטעון אחד מהחודשים'); return; }
 
-        function updateCharts() {
-            // Category Chart
-            const expensesByCategory = {};
-            allTransactions.filter(t => t.type === 'expense').forEach(t => {
-                expensesByCategory[t.category] = (expensesByCategory[t.category] || 0) + t.amount;
-            });
+        const stats1 = calcStats(t1);
+        const stats2 = calcStats(t2);
+        const label1 = document.getElementById('compareMonth1').selectedOptions[0].text;
+        const label2 = document.getElementById('compareMonth2').selectedOptions[0].text;
 
-            const labels = Object.keys(expensesByCategory);
-            const data = Object.values(expensesByCategory);
-            const colors = ['#ef4444', '#f97316', '#8b5cf6', '#3b82f6', '#ec4899', '#10b981', '#f59e0b'];
+        document.getElementById('compareTitle').textContent = `${label1} לעומת ${label2}`;
 
-            if (charts.category) charts.category.destroy();
-            charts.category = new Chart(document.getElementById('categoryChart'), {
-                type: 'doughnut',
-                data: {
-                    labels,
-                    datasets: [{ data, backgroundColor: colors, borderWidth: 0 }]
+        // Stats comparison
+        document.getElementById('compareStatsGrid').innerHTML = `
+            <div class="compare-col">
+                <h4>${label1}</h4>
+                ${compareStatRow('הכנסות', stats1.income, stats2.income, true)}
+                ${compareStatRow('הוצאות', stats1.expenses, stats2.expenses, false)}
+                ${compareStatRow('תזרים נטו', stats1.net, stats2.net, true)}
+            </div>
+            <div class="compare-col">
+                <h4>${label2}</h4>
+                ${compareStatRow('הכנסות', stats2.income, stats1.income, true)}
+                ${compareStatRow('הוצאות', stats2.expenses, stats1.expenses, false)}
+                ${compareStatRow('תזרים נטו', stats2.net, stats1.net, true)}
+            </div>
+        `;
+
+        // Compare chart
+        if (charts.compare) charts.compare.destroy();
+        const cats = [...new Set([...t1, ...t2].filter(t => t.type === 'expense').map(t => t.category))];
+        const data1 = cats.map(c => t1.filter(t => t.type === 'expense' && t.category === c).reduce((s, t) => s + t.amount, 0));
+        const data2 = cats.map(c => t2.filter(t => t.type === 'expense' && t.category === c).reduce((s, t) => s + t.amount, 0));
+
+        charts.compare = new Chart(document.getElementById('compareChart'), {
+            type: 'bar',
+            data: {
+                labels: cats,
+                datasets: [
+                    { label: label1, data: data1, backgroundColor: 'rgba(59, 130, 246, 0.8)', borderRadius: 6 },
+                    { label: label2, data: data2, backgroundColor: 'rgba(139, 92, 246, 0.8)', borderRadius: 6 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: getChartTextColor() } },
+                    tooltip: { callbacks: { label: ctx => `₪${ctx.raw.toLocaleString('he-IL')}` } }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { color: '#94a3b8' } }
-                    }
+                scales: {
+                    y: { grid: { color: getGridColor() }, ticks: { color: getChartTextColor(), callback: v => '₪' + v.toLocaleString('he-IL') } },
+                    x: { grid: { display: false }, ticks: { color: getChartTextColor() } }
                 }
-            });
-
-            // Income vs Expense Chart
-            const totalIncome = allTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-            const totalExpenses = allTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-
-            if (charts.incomeExpense) charts.incomeExpense.destroy();
-            charts.incomeExpense = new Chart(document.getElementById('incomeExpenseChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['הכנסות', 'הוצאות'],
-                    datasets: [{
-                        data: [totalIncome, totalExpenses],
-                        backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(239, 68, 68, 0.8)'],
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
-                        x: { grid: { display: false }, ticks: { color: '#64748b' } }
-                    }
-                }
-            });
-        }
-
-        function updateCategoryList() {
-            const expensesByCategory = {};
-            allTransactions.filter(t => t.type === 'expense').forEach(t => {
-                expensesByCategory[t.category] = (expensesByCategory[t.category] || 0) + t.amount;
-            });
-
-            const sorted = Object.entries(expensesByCategory).sort((a, b) => b[1] - a[1]);
-            
-            document.getElementById('categoryList').innerHTML = sorted.map(([cat, amount]) => `
-                <div class="category-item">
-                    <span class="category-name">${cat}</span>
-                    <span class="category-amount" style="color: var(--accent-red)">${formatCurrency(amount)}</span>
-                </div>
-            `).join('');
-        }
-
-        function updateTable() {
-            const tbody = document.getElementById('transactionsBody');
-            
-            if (allTransactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="loading">אין נתונים להצגה</td></tr>';
-                return;
             }
-            
-            tbody.innerHTML = allTransactions.map(t => `
-                <tr>
-                    <td>${formatDate(t.date)}</td>
-                    <td><span class="type-badge ${t.type}">${t.type === 'income' ? '📈 הכנסה' : '📉 הוצאה'}</span></td>
-                    <td>${t.category}</td>
-                    <td>${t.subcategory}</td>
-                    <td>${t.supplier}</td>
-                    <td class="amount-cell ${t.type}">${formatCurrency(t.amount)}</td>
-                    <td>${t.checkNum || '-'}</td>
-                    <td><span class="status-badge ${t.status}">${t.status === 'completed' ? '✅ בוצע' : '⏳ ממתין'}</span></td>
-                    <td>${t.notes || '-'}</td>
-                </tr>
-            `).join('');
-        }
+        });
 
-        function formatCurrency(amount) {
-            return '₪' + Math.abs(amount).toLocaleString('he-IL');
-        }
+        document.getElementById('compareChartSection').classList.add('active');
+    } catch (e) {
+        showError('שגיאה בטעינת נתוני השוואה');
+    }
+}
 
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('he-IL');
-        }
+function compareStatRow(label, val, other, higherIsBetter) {
+    const diff = val - other;
+    const pct = other !== 0 ? Math.round((diff / Math.abs(other)) * 100) : 0;
+    const isGood = higherIsBetter ? diff >= 0 : diff <= 0;
+    const arrow = diff > 0 ? '↑' : diff < 0 ? '↓' : '→';
+    const cls = isGood ? 'up' : 'down';
+    return `<div class="category-item">
+        <span class="category-name">${label}</span>
+        <span class="category-amount">${formatCurrency(val)}
+            <span class="stat-delta ${cls}" style="font-size:11px; margin-right:6px">${arrow} ${Math.abs(pct)}%</span>
+        </span>
+    </div>`;
+}
 
-        // Load on start
-        loadData();
-    </script>
+function calcStats(transactions) {
+    const completed = transactions.filter(t => t.status === 'completed');
+    const income = completed.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+    const expenses = completed.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+    return { income, expenses, net: income - expenses };
+}
+
+// ============ PARSE ============
+function parseCSV(csvText) {
+    const lines = csvText.split('\n').filter(line => line.trim());
+    const transactions = [];
+    let headerIndex = -1;
+    for (let i = 0; i < Math.min(5, lines.length); i++) {
+        if (lines[i].includes('תאריך') && lines[i].includes('סכום')) { headerIndex = i; break; }
+    }
+    if (headerIndex === -1) return [];
+    const headers = parseCSVLine(lines[headerIndex]);
+    const headerMap = {};
+    headers.forEach((h, i) => { headerMap[h.trim().replace(/"/g, '')] = i; });
+    for (let i = headerIndex + 1; i < lines.length; i++) {
+        const values = parseCSVLine(lines[i]);
+        if (values.length < 3) continue;
+        const getValue = (key) => {
+            const idx = headerMap[key];
+            return idx !== undefined ? (values[idx] || '').trim().replace(/"/g, '') : '';
+        };
+        const dateStr = getValue('תאריך');
+        if (!dateStr) continue;
+        let date = dateStr;
+        if (dateStr.includes('/')) {
+            const parts = dateStr.split('/');
+            if (parts.length === 3) date = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+        }
+        const typeVal = getValue('סוג');
+        const type = typeVal.includes('הכנסה') ? 'income' : 'expense';
+        const statusVal = getValue('סטטוס');
+        const status = statusVal.includes('בוצע') ? 'completed' : 'pending';
+        const amountStr = getValue('סכום').replace(/[₪,\s]/g, '');
+        const amount = parseFloat(amountStr) || 0;
+        transactions.push({
+            date, type,
+            category: getValue('קטגוריה') || 'אחר',
+            subcategory: getValue('תת_קטגוריה') || 'אחר',
+            supplier: getValue('ספק') || '',
+            amount,
+            checkNum: getValue('מס_צק') || '',
+            status,
+            notes: getValue('הערות') || ''
+        });
+    }
+    return transactions;
+}
+
+function parseCSVLine(line) {
+    const result = []; let current = ''; let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') { inQuotes = !inQuotes; }
+        else if (char === ',' && !inQuotes) { result.push(current); current = ''; }
+        else { current += char; }
+    }
+    result.push(current);
+    return result;
+}
+
+// ============ STATS ============
+function updateStats() {
+    const openingBalance = parseFloat(document.getElementById('openingBalance').value) || 0;
+    const completed = allTransactions.filter(t => t.status === 'completed');
+    const totalIncome = completed.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const totalExpenses = completed.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    const currentBalance = openingBalance + totalIncome - totalExpenses;
+    const netFlow = totalIncome - totalExpenses;
+
+    animateValue('currentBalance', currentBalance);
+    animateValue('totalIncome', totalIncome);
+    animateValue('totalExpenses', totalExpenses);
+    animateValue('netFlow', netFlow);
+    document.getElementById('netFlow').style.color = netFlow >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+}
+
+function animateValue(id, target) {
+    const el = document.getElementById(id);
+    const start = 0;
+    const duration = 800;
+    const startTime = performance.now();
+    const update = (now) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = start + (target - start) * eased;
+        el.textContent = formatCurrency(current);
+        if (progress < 1) requestAnimationFrame(update);
+        else el.textContent = formatCurrency(target);
+    };
+    requestAnimationFrame(update);
+}
+
+// ============ CHARTS ============
+function getChartTextColor() { return isLight ? '#475569' : '#94a3b8'; }
+function getGridColor() { return isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)'; }
+
+function updateCharts() {
+    const expensesByCategory = {};
+    allTransactions.filter(t => t.type === 'expense').forEach(t => {
+        expensesByCategory[t.category] = (expensesByCategory[t.category] || 0) + t.amount;
+    });
+    const labels = Object.keys(expensesByCategory);
+    const data = Object.values(expensesByCategory);
+    const colors = ['#ef4444','#f97316','#8b5cf6','#3b82f6','#ec4899','#10b981','#f59e0b','#06b6d4','#84cc16'];
+
+    if (charts.category) charts.category.destroy();
+    charts.category = new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 2, borderColor: isLight ? '#fff' : '#1a2234' }] },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: { position: 'right', labels: { color: getChartTextColor(), padding: 12, font: { family: 'Heebo', size: 12 } } },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` ${ctx.label}: ${formatCurrency(ctx.raw)} (${Math.round(ctx.parsed / data.reduce((a,b)=>a+b,0) * 100)}%)`
+                    }
+                }
+            },
+            animation: { animateRotate: true, duration: 1000 }
+        }
+    });
+
+    const totalIncome = allTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const totalExpenses = allTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+
+    if (charts.incomeExpense) charts.incomeExpense.destroy();
+    charts.incomeExpense = new Chart(document.getElementById('incomeExpenseChart'), {
+        type: 'bar',
+        data: {
+            labels: ['הכנסות', 'הוצאות'],
+            datasets: [{
+                data: [totalIncome, totalExpenses],
+                backgroundColor: ['rgba(16,185,129,0.85)', 'rgba(239,68,68,0.85)'],
+                borderRadius: 8,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: { label: ctx => ` ${formatCurrency(ctx.raw)}` }
+                }
+            },
+            scales: {
+                y: {
+                    grid: { color: getGridColor() },
+                    ticks: { color: getChartTextColor(), callback: v => '₪' + (v/1000).toFixed(0) + 'K' }
+                },
+                x: { grid: { display: false }, ticks: { color: getChartTextColor(), font: { size: 13 } } }
+            },
+            animation: { duration: 800 }
+        }
+    });
+}
+
+// ============ CATEGORY LIST ============
+function updateCategoryList() {
+    const expensesByCategory = {};
+    allTransactions.filter(t => t.type === 'expense').forEach(t => {
+        expensesByCategory[t.category] = (expensesByCategory[t.category] || 0) + t.amount;
+    });
+    const sorted = Object.entries(expensesByCategory).sort((a, b) => b[1] - a[1]);
+    const max = sorted.length > 0 ? sorted[0][1] : 1;
+
+    document.getElementById('categoryList').innerHTML = sorted.map(([cat, amount]) => `
+        <div class="category-item">
+            <span class="category-name">${cat}</span>
+            <div class="category-bar-wrap">
+                <div class="category-bar" style="width: 0%" data-pct="${Math.round(amount / max * 100)}"></div>
+            </div>
+            <span class="category-amount" style="color: var(--accent-red)">${formatCurrency(amount)}</span>
+        </div>
+    `).join('');
+
+    // Animate bars after render
+    setTimeout(() => {
+        document.querySelectorAll('.category-bar').forEach(bar => {
+            bar.style.width = bar.dataset.pct + '%';
+        });
+    }, 100);
+}
+
+// ============ TABLE ============
+let sortDir = { date: false, category: false, supplier: false, amount: false };
+
+function sortTable(key) {
+    sortDir[key] = !sortDir[key];
+    filteredTransactions.sort((a, b) => {
+        let va = a[key], vb = b[key];
+        if (key === 'amount') { va = +va; vb = +vb; }
+        if (key === 'date') { va = new Date(va); vb = new Date(vb); }
+        if (va < vb) return sortDir[key] ? -1 : 1;
+        if (va > vb) return sortDir[key] ? 1 : -1;
+        return 0;
+    });
+    currentPage = 1;
+    renderTable();
+}
+
+function filterTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    filteredTransactions = allTransactions.filter(t =>
+        t.supplier.toLowerCase().includes(q) ||
+        t.category.toLowerCase().includes(q) ||
+        t.subcategory.toLowerCase().includes(q) ||
+        t.notes.toLowerCase().includes(q) ||
+        String(t.amount).includes(q)
+    );
+    currentPage = 1;
+    renderTable();
+}
+
+function renderTable() {
+    const tbody = document.getElementById('transactionsBody');
+    const total = filteredTransactions.length;
+
+    if (total === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:40px; color:var(--text-muted)">אין נתונים להצגה</td></tr>';
+        document.getElementById('paginationArea').style.display = 'none';
+        return;
+    }
+
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    const end = Math.min(start + ROWS_PER_PAGE, total);
+    const page = filteredTransactions.slice(start, end);
+
+    tbody.innerHTML = page.map(t => `
+        <tr>
+            <td>${formatDate(t.date)}</td>
+            <td><span class="type-badge ${t.type}">${t.type === 'income' ? '📈 הכנסה' : '📉 הוצאה'}</span></td>
+            <td>${t.category}</td>
+            <td>${t.subcategory}</td>
+            <td>${t.supplier}</td>
+            <td class="amount-cell ${t.type}">${formatCurrency(t.amount)}</td>
+            <td>${t.checkNum || '-'}</td>
+            <td><span class="status-badge ${t.status}">${t.status === 'completed' ? '✅ בוצע' : '⏳ ממתין'}</span></td>
+            <td>${t.notes || '-'}</td>
+        </tr>
+    `).join('');
+
+    // Pagination
+    const pages = Math.ceil(total / ROWS_PER_PAGE);
+    const paginationArea = document.getElementById('paginationArea');
+    paginationArea.style.display = 'flex';
+    document.getElementById('paginationInfo').textContent = `מציג ${start + 1}–${end} מתוך ${total} תנועות`;
+
+    let btns = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+    for (let p = Math.max(1, currentPage - 2); p <= Math.min(pages, currentPage + 2); p++) {
+        btns += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goPage(${p})">${p}</button>`;
+    }
+    btns += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === pages ? 'disabled' : ''}>›</button>`;
+    document.getElementById('paginationBtns').innerHTML = btns;
+}
+
+function goPage(p) {
+    const pages = Math.ceil(filteredTransactions.length / ROWS_PER_PAGE);
+    if (p < 1 || p > pages) return;
+    currentPage = p;
+    renderTable();
+    document.querySelector('.table-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ============ SKELETON ============
+function showSkeletonRows() {
+    const tbody = document.getElementById('transactionsBody');
+    tbody.innerHTML = Array.from({ length: 6 }, () => `
+        <tr class="skeleton-row">
+            ${Array.from({ length: 9 }, (_, i) => `<td><div class="skeleton skeleton-cell" style="width:${60 + i * 5}%"></div></td>`).join('')}
+        </tr>
+    `).join('');
+    document.getElementById('paginationArea').style.display = 'none';
+}
+
+// ============ HELPERS ============
+function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
+function formatCurrency(amount) {
+    return '₪' + Math.abs(Math.round(amount)).toLocaleString('he-IL');
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    if (isNaN(date)) return dateStr;
+    return date.toLocaleDateString('he-IL');
+}
+
+// ============ INIT ============
+loadData(false);
+</script>
 </body>
 </html>
